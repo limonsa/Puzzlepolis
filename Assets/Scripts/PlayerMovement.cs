@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Movement Setup")]
     [SerializeField] private Rigidbody player;
     [SerializeField] private Transform head;
+    [SerializeField] private Transform cameraPlayer;
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private float rotationSpeed = 50f;
 
@@ -32,33 +33,27 @@ public class PlayerMovement : MonoBehaviour
     {
         //Left and right rotation with keyboard:
         yRotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime;
+        player.transform.Rotate(0, yRotation, 0);
+
         //Up and down rotation with mouse:
         xRotation = head.transform.eulerAngles.x + Input.GetAxis("Mouse Y") * Time.deltaTime * sensitivityY;
-        float currentXrotation = head.transform.eulerAngles.x;
-        //Limit the liberty for looking up and down:
-        //xRotation = Mathf.Clamp(xRotation, -rotationLimit, rotationLimit);
-        Debug.Log($"xRotation = {xRotation}");
 
-        if(xRotation > rotationLimit && xRotation < 360 - rotationLimit)
+        //Limit the liberty for looking up and down:
+        //Clamp does not work becuse transform.Rotation works with absolute [or positive] angle values
+        //xRotation = Mathf.Clamp(xRotation, -rotationLimit, rotationLimit);
+
+        if (xRotation > rotationLimit && xRotation < 360 - rotationLimit)
         {
-            Debug.Log($"Entro a uno con {head.transform.eulerAngles.x} / {xRotation}");
             if (xRotation > 180)
             {
-                Debug.Log($"Entro a DOS con {head.transform.eulerAngles.x} / {xRotation}");
                 xRotation = 360 - rotationLimit;
-                Debug.Log($"xRotation quedo en {xRotation}");
             }
             else
             {
-                Debug.Log($"Entro a  t r e s  con {head.transform.eulerAngles.x} / {xRotation}");
                 xRotation = rotationLimit;
-                Debug.Log($"xRotation quedo en {xRotation}");
             }
-
         }
-        Debug.Log($"xRotation quedo en {xRotation}");
-        head.transform.eulerAngles = new Vector3(xRotation, 0, 0);
-        Debug.Log($"HEAD ROTO A {head.transform.eulerAngles.x} / {xRotation}");
+        head.transform.eulerAngles = new Vector3(xRotation, player.transform.localEulerAngles.y, 0);
     }
 
 
@@ -66,11 +61,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 direction = new Vector3(0, 0, Input.GetAxis("Vertical"));
         transform.Translate(direction * movementSpeed * Time.deltaTime);
+
     }
 
     private void ControlSpeed()
     {
-        Vector3 currentSpeed = new Vector3(player.velocity.x, 0f, player.velocity.z);
+        Vector3 currentSpeed = new Vector3(0f, 0f, player.velocity.z);
         //Check the Rigidbody speed (player speed) is moving faster than the moveSpeed
         //caused for aceleration
         if (currentSpeed.magnitude > movementSpeed)
