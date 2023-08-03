@@ -21,16 +21,18 @@ public class Pickable : MonoBehaviour
     public void Grab(Transform pickableObjectTransform)
     {
         tempShowTransform = pickableObjectTransform;
+        /* Physics for floating picked object:
         myRigidbody.useGravity = false;
-        myRigidbody.isKinematic = true;
+        myRigidbody.isKinematic = true;*/
         HoldingObject?.Invoke();
     }
 
     public void Drop()
     {
         tempShowTransform = null;
+        /* Physics for unpicked object (NOT floating):
         myRigidbody.useGravity = true;
-        myRigidbody.isKinematic = false;
+        myRigidbody.isKinematic = false;*/
         DroppingObject?.Invoke();
     }
 
