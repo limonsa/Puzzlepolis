@@ -1,21 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class ProductOf3_Controller : MonoBehaviour
 {
     public List<Addend> addends = new List<Addend>();
     public List<Addend> winnerPath = new List<Addend>();
     [SerializeField] private GameObject portal;
+    [SerializeField] private Transform positionPortalView;
+    [SerializeField] private GameObject cameraGuide;
+    [SerializeField] private GameObject guide;
     [SerializeField] private GameObject player;
     [SerializeField] private Addend startAddend;
     [SerializeField] private Addend targetAddend;
+    [SerializeField] private GameObject endCutscene;
 
     public LineRenderer path;
 
     private Dictionary<Addend, float> distances = new Dictionary<Addend, float>();
     private Dictionary<Addend, Addend> previousAddends = new Dictionary<Addend, Addend>();
     private List<Addend> shortestPath;
+
+    PlayableDirector director;
 
     private void Awake()
     {
@@ -25,6 +32,11 @@ public class ProductOf3_Controller : MonoBehaviour
             addends.Add(a);
         }
         Picker.CheckWin += CheckIfWon;
+    }
+
+    void Start()
+    {
+        director = endCutscene.GetComponent<PlayableDirector>();
     }
 
     private void Update()
@@ -60,6 +72,7 @@ public class ProductOf3_Controller : MonoBehaviour
         if (playerWon)
         {
             OpenPortal();
+            ShowWinCutscene();
         }
 
     }
@@ -134,4 +147,10 @@ public class ProductOf3_Controller : MonoBehaviour
 
     }
 
+    public void ShowWinCutscene() {
+        cameraGuide.transform.position = positionPortalView.position;
+        cameraGuide.transform.rotation = positionPortalView.rotation;
+        //guide.transform.rotation = positionPortalView.rotation;
+        director.Play();
+    }
 }

@@ -28,7 +28,7 @@ public class Picker : MonoBehaviour
                 {
                     if (raycastHit.transform.TryGetComponent(out objectPickable))
                     {
-                        Debug.Log("Found object to pick");
+                        //Debug.Log("Found object to pick");
                         objectPickable.Grab(grabObjectPos);
                     }
                 }

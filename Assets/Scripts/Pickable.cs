@@ -12,6 +12,7 @@ public class Pickable : MonoBehaviour
 
     public static UnityAction HoldingObject;
     public static UnityAction DroppingObject;
+    public static UnityAction GettingReadyToMove;
 
     private void Awake()
     {
@@ -21,18 +22,23 @@ public class Pickable : MonoBehaviour
     public void Grab(Transform pickableObjectTransform)
     {
         tempShowTransform = pickableObjectTransform;
-        /* Physics for floating picked object:
-        myRigidbody.useGravity = false;
-        myRigidbody.isKinematic = true;*/
+        //Physics for floating picked object:
+        if (gameObject.CompareTag("Disk")) {
+            GettingReadyToMove?.Invoke();
+            myRigidbody.useGravity = false;
+            myRigidbody.isKinematic = true;
+        }
         HoldingObject?.Invoke();
     }
 
     public void Drop()
     {
         tempShowTransform = null;
-        /* Physics for unpicked object (NOT floating):
-        myRigidbody.useGravity = true;
-        myRigidbody.isKinematic = false;*/
+        //Physics for unpicked object (NOT floating):
+        if (gameObject.CompareTag("Disk")){
+            myRigidbody.useGravity = true;
+            myRigidbody.isKinematic = false;
+        }
         DroppingObject?.Invoke();
     }
 
