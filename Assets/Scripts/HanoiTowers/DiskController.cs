@@ -7,55 +7,43 @@ using UnityEngine.Events;
 public class DiskController : MonoBehaviour
 {
     [SerializeField] private GameObject disk;
+    [SerializeField] private HanoiGameManager gmHanoi;
     [SerializeField] private Transform collisionChecker;
 
     public int weight;
-    public int tower;
-    public static Action<GameObject, int> PlacingDisk;
-    public Transform lastTransform;
+    public int tower = 0;
+    public bool inPlay = false;
 
-    private void Start()
-    {
-        weight = int.Parse(disk.name);
-        tower = 0;
-        Pickable.GettingReadyToMove += SaveLastLocation;
-    }
+    public static UnityAction<GameObject, int> ReceivingCollision;
+
+    /*public static Action<GameObject, int, int> MoveDisk;
+    public Transform lastTransform;
+    
+    */
 
     private void OnCollisionEnter(Collision collision)
     {
         ContactPoint[] contacts = new ContactPoint[10];
         int numContacts = collision.GetContacts(contacts);
-        Debug.Log($"{gameObject.name} RECIBIO COLISION DE {collision.gameObject.name}");
-        if (collision.gameObject.CompareTag("Disk")) {
-            for(int i = 0; i < numContacts; i++)
+
+        Debug.Log($"Disk{gameObject.name} (that is inPlay? {inPlay}) detected Collision with {collision.gameObject.name}");
+        if (inPlay && !gmHanoi.isMovingBackState())
+        {
+            for (int i = 0; i < numContacts; i++)
             {
-                Debug.Log("Detccion con un disco detectada");
-                if (Vector3.Distance(contacts[i].point, collisionChecker.position) < 0.5f)
-                {
-                    Debug.Log($"{gameObject.name} COLISIONO CON {collision.gameObject.name} & weight = {collision.gameObject.GetComponent<DiskController>().weight}");
-                    if (collision.gameObject.GetComponent<DiskController>().weight < weight)
-                    {
-                        Debug.Log($"va a a adicionar {collision.gameObject.name}");
-                        PlacingDisk?.Invoke(collision.gameObject, tower);
-                    }
-                    else
-                    {
-                        Debug.Log($"ENTRO AL else porque el peso de {collision.gameObject.name} es mayor o igual a {weight}");
-                        collision.gameObject.transform.position = collision.gameObject.GetComponent<DiskController>().lastTransform.position;
-                    }
+                Debug.Log($"Y-collision distance{Mathf.Abs(contacts[i].point.y - collisionChecker.position.y)}");
+                if (Mathf.Abs(contacts[i].point.y - collisionChecker.position.y) < 0.015f) {
+                    i = numContacts;
+                    Debug.Log($"INVOKING: ordering to move Disk{collision.gameObject.name} to tower{tower}");
+                    ReceivingCollision?.Invoke(collision.gameObject, tower);
                 }
-            }            
+                
+            }
         }
     }
 
-    public void SaveLastLocation()
+    public void SetTower(int value)
     {
-        Debug.Log($"Saving {gameObject.name} current position in {tower}");
-        lastTransform.position = disk.transform.position;
-    }
-
-    public void MoveBack()
-    {
-        disk.transform.position = lastTransform.position;
+        tower = value;
     }
 }

@@ -16370,7 +16370,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1797193815
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17013,6 +17013,7 @@ MonoBehaviour:
     m_Bits: 128
   pickupDistance: 2
   grabObjectPos: {fileID: 1063382775}
+  hgmTEMP: {fileID: 0}
 --- !u!65 &1838687731
 BoxCollider:
   m_ObjectHideFlags: 0

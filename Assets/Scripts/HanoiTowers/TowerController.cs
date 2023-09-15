@@ -7,95 +7,92 @@ using System;
 public class TowerController : MonoBehaviour
 {
     [SerializeField] private int towerNumber;
+    [SerializeField] private HanoiGameManager gmHanoi;
     private Stack<GameObject> disks = new Stack<GameObject>();
-    //private Dictionary<GameObject, int> towers = new Dictionary<GameObject, int>();
-    
+
+    public static UnityAction<GameObject, int> ReceivingCollision;
+
+    /*public static Action<GameObject, int> SettingUpDisks;
     public static Action<GameObject, int, int> MovingPlateInGame;
-
-
-    private void Start()
-    {
-        //HanoiGameManager.MovingPlateInTower += TakeAwayDisk;
-        //DiskController.PlacingDisk += AddDiskToTower;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            ShowDisksStacked();
-        }
-    }
+    public static Action<GameObject> SavingLogLastLocation;
+    */
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag.Equals("Disk"))
-        {
-            if (!disks.Contains(collision.gameObject)) { 
-                //collision.gameObject.GetComponent<DiskContainer>().GetDiskController().tower = towerNumber;
-                collision.gameObject.GetComponent<DiskController>().tower = towerNumber;
-                disks.Push(collision.gameObject);
-                ShowDisksStacked();
-            }
+        if (collision.gameObject.CompareTag("Disk")) {
+            Debug.Log($"Invoking TowerConroller.ReceivingCollision (Disk{collision.gameObject.name}, Tower{towerNumber})");
+            ReceivingCollision?.Invoke(collision.gameObject, towerNumber);
         }
     }
 
-    public void AddDiskToTower(GameObject newDisk, int fromTower)
+    public bool IsDiskInTower(GameObject disk)
     {
-        bool moveGranted = false;
-        if(newDisk.GetComponent<DiskController>().tower == towerNumber) { 
-            Debug.Log($"About to add disk {newDisk.gameObject.name} to {towerNumber}");
-            if (!disks.Contains(newDisk))
+        bool rta = false;
+        if (disks.Contains(disk))
+        {
+            rta = true;
+        }
+        return rta;
+    }
+
+    public bool IsNextLIFO(GameObject disk)
+    {
+        bool rta = false;
+        if (disks.Count > 0)
+        {
+            if (disks.Peek().Equals(disk))
             {
-                try { 
-                    //Let know the fromTower who has the disk that it is moving out -> must erase it
-                    MovingPlateInGame?.Invoke(newDisk, fromTower, towerNumber);
-                    moveGranted = true;
-                }
-                catch
-                {
-                    //failed attempt
-                    moveGranted = false;
-                }
-
-                if (moveGranted) { 
-                    newDisk.GetComponent<DiskController>().tower = towerNumber;
-                    if (disks.Count == 0){
-                        disks.Push(newDisk);
-                    }
-                    else if (disks.Peek().GetComponent<DiskController>().weight > newDisk.GetComponent<DiskController>().weight)
-                    {
-                        disks.Push(newDisk);
-                    }
-                }
-                ShowDisksStacked();
+                rta = true;
             }
         }
+        return rta;
     }
 
-    public void SetupDisk(GameObject newDisk)
+    public float GetWeightNextLIFO()
     {
-        if (!disks.Contains(newDisk)) { 
-            newDisk.GetComponent<DiskController>().tower = towerNumber;
-            disks.Push(newDisk);
-        }
-    }
-
-    public void ShowDisksStacked()
-    {
-        Debug.Log($"Tower #{towerNumber} has {disks.Count} disks");
-    }
-
-    public bool TakeAwayDisk(GameObject newDisk, int fromTower)
-    {
-        Debug.Log($"About to take away disk {newDisk.gameObject.name} from {fromTower}");
-        if (fromTower == towerNumber &&
-            newDisk.GetComponent<DiskController>().name == disks.Peek().GetComponent<DiskController>().name)
+        float rta = -1;
+        if (disks.Count > 0)
         {
-            //Debug.Log($"About to take away disk {newDisk.gameObject.name} from {towerNumber}");
-            disks.Pop();
-            return true;
+            rta = disks.Peek().GetComponent<DiskController>().weight;
         }
-        return false;
+        return rta;
+    }
+
+    public void SetPositionNextLIFO(Vector3 newPosition)
+    {
+        disks.Peek().GetComponent<DiskController>().transform.position = newPosition; ;
+    }
+
+    public GameObject PopFromStack()
+    {
+        GameObject rta = disks.Pop();
+        if (disks.Count > 0)
+        {
+            disks.Peek().GetComponent<DiskController>().inPlay = true;
+        }
+        Debug.Log($"Removing Disk{rta.name} to tower {towerNumber} which now has {disks.Count} disks");
+        return rta;
+    }
+
+    public void PushToStack(GameObject disk)
+    {
+        disk.GetComponent<DiskController>().tower = towerNumber;
+        disk.GetComponent<DiskController>().inPlay = true;
+        if (disks.Count > 0) {
+            disks.Peek().GetComponent<DiskController>().inPlay = false;
+        }
+        disks.Push(disk);
+        Debug.Log($"Adding Disk{disk.name} to tower {towerNumber}={disk.GetComponent<DiskController>().tower} which now has {disks.Count} disks");
+    }
+
+    public int GetTowerNumber()
+    {
+        return towerNumber;
+    }
+
+    public string GetDiskNames()
+    {
+        string rta = $"Tower{towerNumber} has {disks.Count} disks";
+        return rta;
     }
 }

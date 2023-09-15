@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Disk
+  - Base
   layers:
   - Default
   - TransparentFX
