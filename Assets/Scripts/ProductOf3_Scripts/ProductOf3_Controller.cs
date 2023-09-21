@@ -49,6 +49,12 @@ public class ProductOf3_Controller : MonoBehaviour
             CalculateCheapestPath();
             DrawCheapestPath();
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            OpenPortal();
+            ShowWinCutscene();
+        }
     }
 
     public void CheckIfWon()

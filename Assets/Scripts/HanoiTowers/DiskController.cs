@@ -14,28 +14,23 @@ public class DiskController : MonoBehaviour
     public int tower = 0;
     public bool inPlay = false;
 
-    public static UnityAction<GameObject, int> ReceivingCollision;
-
-    /*public static Action<GameObject, int, int> MoveDisk;
-    public Transform lastTransform;
-    
-    */
+    public static UnityAction<GameObject, int, string> ReceivingCollision;
 
     private void OnCollisionEnter(Collision collision)
     {
         ContactPoint[] contacts = new ContactPoint[10];
         int numContacts = collision.GetContacts(contacts);
 
-        Debug.Log($"Disk{gameObject.name} (that is inPlay? {inPlay}) detected Collision with {collision.gameObject.name}");
+        //Debug.Log($"Disk{gameObject.name} (that is inPlay? {inPlay}) detected Collision with {collision.gameObject.name}");
         if (inPlay && !gmHanoi.isMovingBackState())
         {
             for (int i = 0; i < numContacts; i++)
             {
-                Debug.Log($"Y-collision distance{Mathf.Abs(contacts[i].point.y - collisionChecker.position.y)}");
+                //Debug.Log($"Y-collision distance{Mathf.Abs(contacts[i].point.y - collisionChecker.position.y)}");
                 if (Mathf.Abs(contacts[i].point.y - collisionChecker.position.y) < 0.015f) {
                     i = numContacts;
-                    Debug.Log($"INVOKING: ordering to move Disk{collision.gameObject.name} to tower{tower}");
-                    ReceivingCollision?.Invoke(collision.gameObject, tower);
+                    //Debug.Log($"INVOKING: ordering to move Disk{collision.gameObject.name} to tower{tower}");
+                    ReceivingCollision?.Invoke(collision.gameObject, tower, "DiskController");
                 }
                 
             }
@@ -45,5 +40,13 @@ public class DiskController : MonoBehaviour
     public void SetTower(int value)
     {
         tower = value;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Debug.Log($"TOWER: {tower} has Disk{gameObject.name}");
+        }
     }
 }

@@ -10,18 +10,22 @@ public class TowerController : MonoBehaviour
     [SerializeField] private HanoiGameManager gmHanoi;
     private Stack<GameObject> disks = new Stack<GameObject>();
 
-    public static UnityAction<GameObject, int> ReceivingCollision;
-
-    /*public static Action<GameObject, int> SettingUpDisks;
-    public static Action<GameObject, int, int> MovingPlateInGame;
-    public static Action<GameObject> SavingLogLastLocation;
-    */
+    public static UnityAction<GameObject, int, string> ReceivingCollision;
+    public static UnityAction NotifyingWin;
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Disk")) {
             Debug.Log($"Invoking TowerConroller.ReceivingCollision (Disk{collision.gameObject.name}, Tower{towerNumber})");
-            ReceivingCollision?.Invoke(collision.gameObject, towerNumber);
+            ReceivingCollision?.Invoke(collision.gameObject, towerNumber, "TowerController");
+        }
+    }
+
+    private void Update()
+    {
+        if(towerNumber ==3 && disks.Count == 3)
+        {
+            NotifyingWin?.Invoke();
         }
     }
 
@@ -94,5 +98,10 @@ public class TowerController : MonoBehaviour
     {
         string rta = $"Tower{towerNumber} has {disks.Count} disks";
         return rta;
+    }
+
+    public int GetDisksCount()
+    {
+        return disks.Count;
     }
 }

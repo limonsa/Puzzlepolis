@@ -31,25 +31,15 @@ public class Picker : MonoBehaviour
                     
                     if (raycastHit.transform.TryGetComponent(out objectPickable))
                     {
-                        /*if (objectPickable.CompareTag("Disk"))
-                        {
-                            Debug.Log($"PICKER SAYS >>>>> POSITION of disk{objectPickable.name} in tower{objectPickable.GetComponent<DiskController>().tower} is {objectPickable.GetComponent<DiskController>().transform.position} AND LASTPOSITION in HanoiGameManager={hgmTEMP.logLastMove}");
-                            GettingReadyToMove?.Invoke(objectPickable.gameObject);
-                            //objectPickable.GetComponent<DiskController>().lastTransform = objectPickable.GetComponent<DiskController>().transform;
-                        }*/
                         //For HanoiGameTower to listen an decide
                         GettingReadyToMove?.Invoke(objectPickable.gameObject);
                         objectPickable.Grab(grabObjectPos);
-                        
-                        //Debug.Log($"PICKER SAYS >>>>> lastPos now is = {objectPickable.GetComponent<DiskController>().lastTransform.position}");
                     }
                 }
             }
             else
             {  //Object currently being picked => drop the object
                 objectPickable.Drop();
-                //TODO: delete, justo for Hanoi debuggin
-                //Debug.Log($"PICKER SAYS AFTER DROPPING>>>>> position = {objectPickable.GetComponent<DiskController>().transform.position}  AND LASTPOSITION in HanoiGameManager={hgmTEMP.logLastMove}");
                 objectPickable = null;
                 CheckWin?.Invoke();
             }

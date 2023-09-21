@@ -3,11 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class HanoiGameManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] disksSetup;
     [SerializeField] private TowerController[] towers;
+
+    [Header("Setting End of puzzle")]
+    [SerializeField] private GameObject portal;
+    [SerializeField] private Transform positionPortalView;
+    [SerializeField] private GameObject cameraGuide;
+    [SerializeField] private GameObject winCutscene;
+    [SerializeField] private GameObject loseCutscene;
+    [SerializeField] private GameObject timer;
+
+    PlayableDirector director;
+
     private bool settingUpState = true;
     private bool movingBackState = false;
     public Vector3 logLastMove;
@@ -20,6 +32,9 @@ public class HanoiGameManager : MonoBehaviour
         TowerController.ReceivingCollision += MakingMove;
         DiskController.ReceivingCollision += MakingMove;
         Picker.GettingReadyToMove += SavingLogLastMove;
+        Picker.CheckWin += CheckingIfWon;
+        TowerController.NotifyingWin += ShowWinCutscene;
+        CountDown.TimerEnding += CheckingIfWon;
 
         //Positioning the disks on the interface and the tower0's STACK of disks
         disksSetup[0].transform.position = new Vector3(-4.9f, 1.09f, 1f);
@@ -30,13 +45,21 @@ public class HanoiGameManager : MonoBehaviour
         logLastMove = disksSetup[0].transform.position;
         towers[0].PushToStack(disksSetup[0]);
 
-        
+        director = winCutscene.GetComponent<PlayableDirector>();
     }
 
     private void OnDestroy()
     {
         TowerController.ReceivingCollision -= MakingMove;
         DiskController.ReceivingCollision -= MakingMove;
+        Picker.GettingReadyToMove -= SavingLogLastMove;
+        Picker.CheckWin -= CheckingIfWon;
+        TowerController.NotifyingWin -= ShowWinCutscene;
+    }
+    private void Awake()
+    {
+        portal.SetActive(false);
+
     }
 
     private void Update()
@@ -48,14 +71,17 @@ public class HanoiGameManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.K))
         {
             Debug.Log("\n");
+        }else if (Input.GetKeyDown(KeyCode.F))
+        {
+            ShowWinCutscene();
         }
     }
 
-    private void MakingMove(GameObject disk, int toTower)
+    private void MakingMove(GameObject disk, int toTower, string source)
     {
         int fromTower = LocateDisk(disk);
         float weightTo = 0, weightFrom = 0;
-        if (!movingBackState) { 
+        if (!movingBackState || source.Equals("TowerController")) { 
             Debug.Log($"MakingMove: about to move Disk{disk.name} that is currently in Tower{fromTower}");
             if (fromTower >= 0)
             {
@@ -81,6 +107,7 @@ public class HanoiGameManager : MonoBehaviour
                     else
                     {
                         towers[toTower].PushToStack(towers[fromTower].PopFromStack());
+                        movingBackState = false;
                     }
                 }
             }
@@ -90,6 +117,45 @@ public class HanoiGameManager : MonoBehaviour
             Debug.Log($"IGNORING MakingMove: Disk{disk.name} that is currently in Tower{fromTower} because is MOVING BACK to logLastPosition");
             movingBackState = false;
         }
+    }
+
+    private void CheckingIfWon()
+    {
+        Debug.Log($"ChekingIfWon: towers[2].GetDisksCount() = {towers[2].GetDisksCount()}");
+        if (towers[2].GetDisksCount() == 3)
+        {
+            ShowWinCutscene();
+        }
+        else
+        {
+            ShowLoseCutscene();
+        }
+    }
+
+    public void OpenPortal()
+    {
+        portal.SetActive(true);
+
+    }
+
+    public void ShowWinCutscene()
+    {
+        timer.SetActive(false);
+        OpenPortal();
+        winCutscene.SetActive(true);
+        cameraGuide.transform.position = positionPortalView.position;
+        cameraGuide.transform.rotation = positionPortalView.rotation;
+        //guide.transform.rotation = positionPortalView.rotation;
+        director.Play();
+    }
+
+    public void ShowLoseCutscene()
+    {
+        loseCutscene.SetActive(true);
+        cameraGuide.transform.position = positionPortalView.position;
+        cameraGuide.transform.rotation = positionPortalView.rotation;
+        //guide.transform.rotation = positionPortalView.rotation;
+        director.Play();
     }
 
     private int LocateDisk(GameObject disk)
@@ -112,8 +178,7 @@ public class HanoiGameManager : MonoBehaviour
         {
             tower.GetDiskNames().ToString();
             Debug.Log($"\nTOWER #{tower.GetTowerNumber()} says: {tower.GetDiskNames()}");
-        }
-        
+        }   
     }
 
     public void SavingLogLastMove(GameObject disk) {
