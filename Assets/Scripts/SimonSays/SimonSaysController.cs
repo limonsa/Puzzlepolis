@@ -55,11 +55,11 @@ public class SimonSaysController : MonoBehaviour
     public void HandlingCollision(GameObject reporter, GameObject other)
     {
         int i = -1;
-        foreach (string s in steps)
-        {
-            Debug.Log($"steps has: {s}, Reporter is {reporter.name}, Other is {other.name} and currentStep={currentStep}");
+        //foreach (string s in steps)
+        //{
+        //    Debug.Log($"steps has: {s}, Reporter is {reporter.name}, Other is {other.name} and currentStep={currentStep}");
 
-        }
+        //}
 
         if(reporter.CompareTag("Base") && other.CompareTag("Disk"))
         {
@@ -83,7 +83,7 @@ public class SimonSaysController : MonoBehaviour
         bool won = false;
         player.SetActive(false);
 
-        Debug.Log($"CheckIfWon says: steps[0]={steps[0]}(must be blue) and steps[0]={steps[0]}(must be yellow) ALSO reported[blue].={reported[0].name}(must be suit) and reported[yellow].={reported[1].name}(must be stool)");
+        //Debug.Log($"CheckIfWon says: steps[0]={steps[0]}(must be blue) and steps[0]={steps[0]}(must be yellow) ALSO reported[blue].={reported[0].name}(must be suit) and reported[yellow].={reported[1].name}(must be stool)");
         if (steps[0].Equals(bluePlatform.name) && steps[1].Equals(yellowPlatform.name)) //platform order check
         {
             if (reported[0].Equals(suitcase) && reported[1].Equals(stool))  // Correct object on platform check
@@ -96,7 +96,7 @@ public class SimonSaysController : MonoBehaviour
             confetti.SetActive(true);
             endText.text = "You won!";
             winCutscene.SetActive(true);
-            Debug.Log("YOU WON in CheckIfWon");
+            //Debug.Log("YOU WON in CheckIfWon");
         }
         else
         {
@@ -104,7 +104,7 @@ public class SimonSaysController : MonoBehaviour
             explosion.SetActive(true);
             endText.text = "You lost";
             loseCutscene.SetActive(true);
-            Debug.Log("You lost in CheckIfWon :(");
+            //Debug.Log("You lost in CheckIfWon :(");
         }
         director.Play();
     }

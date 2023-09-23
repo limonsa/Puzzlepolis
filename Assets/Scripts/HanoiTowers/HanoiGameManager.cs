@@ -70,7 +70,7 @@ public class HanoiGameManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.K))
         {
-            Debug.Log("\n");
+            //Debug.Log("\n");
         }else if (Input.GetKeyDown(KeyCode.F))
         {
             ShowWinCutscene();
@@ -82,24 +82,24 @@ public class HanoiGameManager : MonoBehaviour
         int fromTower = LocateDisk(disk);
         float weightTo = 0, weightFrom = 0;
         if (!movingBackState || source.Equals("TowerController")) { 
-            Debug.Log($"MakingMove: about to move Disk{disk.name} that is currently in Tower{fromTower}");
+            //Debug.Log($"MakingMove: about to move Disk{disk.name} that is currently in Tower{fromTower}");
             if (fromTower >= 0)
             {
-                Debug.Log($"towers[{fromTower}].IsNextLIFO({disk.name}) is {towers[fromTower].IsNextLIFO(disk)}");
-                Debug.Log($"!towers[{toTower}].IsDiskInTower({disk.name}) is {!towers[toTower].IsDiskInTower(disk)}");
+                //Debug.Log($"towers[{fromTower}].IsNextLIFO({disk.name}) is {towers[fromTower].IsNextLIFO(disk)}");
+                //Debug.Log($"!towers[{toTower}].IsDiskInTower({disk.name}) is {!towers[toTower].IsDiskInTower(disk)}");
                 if (towers[fromTower].IsNextLIFO(disk) && !towers[toTower].IsDiskInTower(disk))
                 {
                     weightFrom = towers[fromTower].GetWeightNextLIFO();
                     weightTo = towers[toTower].GetWeightNextLIFO();
                     if(weightTo > 0) {
-                        Debug.Log($"Comparing IF weightTo:{weightTo} > weightFrom:{weightFrom} ");
+                        //Debug.Log($"Comparing IF weightTo:{weightTo} > weightFrom:{weightFrom} ");
                         if (weightTo > weightFrom)
                         {
                             towers[toTower].PushToStack(towers[fromTower].PopFromStack());
                         }
                         else
                         {
-                            Debug.Log($"MAKING MOVE: about to move back to {logLastMove}");
+                            //Debug.Log($"MAKING MOVE: about to move back to {logLastMove}");
                             movingBackState = true;
                             towers[fromTower].SetPositionNextLIFO(logLastMove);
                         }
@@ -114,14 +114,14 @@ public class HanoiGameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"IGNORING MakingMove: Disk{disk.name} that is currently in Tower{fromTower} because is MOVING BACK to logLastPosition");
+            //Debug.Log($"IGNORING MakingMove: Disk{disk.name} that is currently in Tower{fromTower} because is MOVING BACK to logLastPosition");
             movingBackState = false;
         }
     }
 
     private void CheckingIfWon()
     {
-        Debug.Log($"ChekingIfWon: towers[2].GetDisksCount() = {towers[2].GetDisksCount()}");
+        //Debug.Log($"ChekingIfWon: towers[2].GetDisksCount() = {towers[2].GetDisksCount()}");
         if (towers[2].GetDisksCount() == 3)
         {
             ShowWinCutscene();
@@ -177,7 +177,7 @@ public class HanoiGameManager : MonoBehaviour
         foreach(TowerController tower in towers)
         {
             tower.GetDiskNames().ToString();
-            Debug.Log($"\nTOWER #{tower.GetTowerNumber()} says: {tower.GetDiskNames()}");
+            //Debug.Log($"\nTOWER #{tower.GetTowerNumber()} says: {tower.GetDiskNames()}");
         }   
     }
 
@@ -188,7 +188,7 @@ public class HanoiGameManager : MonoBehaviour
         }
     }
 
-    public bool isMovingBackState()
+    public bool IsMovingBackState()
     {
         return movingBackState;
     }

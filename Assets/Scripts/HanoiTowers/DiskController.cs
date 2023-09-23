@@ -22,7 +22,7 @@ public class DiskController : MonoBehaviour
         int numContacts = collision.GetContacts(contacts);
 
         //Debug.Log($"Disk{gameObject.name} (that is inPlay? {inPlay}) detected Collision with {collision.gameObject.name}");
-        if (inPlay && !gmHanoi.isMovingBackState())
+        if (inPlay && !gmHanoi.IsMovingBackState())
         {
             for (int i = 0; i < numContacts; i++)
             {
