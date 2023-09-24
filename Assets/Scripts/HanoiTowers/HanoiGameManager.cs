@@ -24,7 +24,27 @@ public class HanoiGameManager : MonoBehaviour
     private bool movingBackState = false;
     public Vector3 logLastMove;
 
-    //public static Action<GameObject, int> MovingPlateInTower;
+    private static HanoiGameManager instance = null;
+    private static readonly object padlock = new object();
+
+    HanoiGameManager()
+    {
+    }
+
+    public static HanoiGameManager Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new HanoiGameManager();
+                }
+                return instance;
+            }
+        }
+    }
 
 
     private void Start()
@@ -192,4 +212,10 @@ public class HanoiGameManager : MonoBehaviour
     {
         return movingBackState;
     }
+}
+enum State
+{
+    Playing,
+    Active,
+    Dormant
 }

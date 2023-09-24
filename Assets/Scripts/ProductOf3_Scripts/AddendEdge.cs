@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(LineRenderer))]
-public class AddendEdge : MonoBehaviour
+public class AddendEdge : Playable
 {
     [SerializeField] public Addend addendFrom;
     [SerializeField] public Addend addendTo;
@@ -13,6 +13,7 @@ public class AddendEdge : MonoBehaviour
 
     private GameObject edgeLabel;
     private LineRenderer line;
+    private string role;
 
     private void Start()
     {
@@ -34,5 +35,20 @@ public class AddendEdge : MonoBehaviour
         line.SetPosition(0, addendFrom.transform.position + (Vector3.down * 0.02f));
         line.SetPosition(1, addendTo.transform.position + (Vector3.down * 0.02f));
         edgeLabel.transform.position = ((addendFrom.transform.position + addendTo.transform.position) / 2) + (Vector3.up * 0.02f);
+    }
+
+    public override string GetNameID()
+    {
+        return textPrefab.name;
+    }
+
+    public override void ActivateRole()
+    {
+        role = textPrefab.layer.ToString();
+    }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        throw new System.NotImplementedException();
     }
 }

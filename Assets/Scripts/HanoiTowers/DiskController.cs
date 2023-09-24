@@ -42,11 +42,11 @@ public class DiskController : MonoBehaviour
         tower = value;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Debug.Log($"TOWER: {tower} has Disk{gameObject.name}");
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.M))
+    //    {
+    //        Debug.Log($"TOWER: {tower} has Disk{gameObject.name}");
+    //    }
+    //}
 }

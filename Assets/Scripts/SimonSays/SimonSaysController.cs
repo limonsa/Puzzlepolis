@@ -24,32 +24,41 @@ public class SimonSaysController : MonoBehaviour
 
     PlayableDirector director;
     private string[] steps = new string[2];
+    private Queue<string> instructions = new Queue<string>();
     private GameObject[] reported = new GameObject[2];
     private int currentStep = 0;
     private StepState progress = StepState.None;
     private bool reportedBlue = false;
     private bool reportedYellow = false;
 
+    private static SimonSaysController instance = null;
+    private static readonly object padlock = new object();
+
+    SimonSaysController()
+    {
+    }
+
+    public static SimonSaysController Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new SimonSaysController();
+                }
+                return instance;
+            }
+        }
+    }
+
     private void Start()
     {
         FallingObject.ReportingCollision += HandlingCollision;
         confetti.SetActive(false);
         director = winCutscene.GetComponent<PlayableDirector>();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            confetti.SetActive(true);
-            endText.text = "You won!";
-            winCutscene.SetActive(true);
-        }else if (Input.GetKeyDown(KeyCode.G))
-        {
-            explosion.SetActive(true);
-            endText.text = "You lost";
-            loseCutscene.SetActive(true);
-        }
+        SetInstructions();
     }
 
     public void HandlingCollision(GameObject reporter, GameObject other)
@@ -92,21 +101,23 @@ public class SimonSaysController : MonoBehaviour
             }
         }
         if (won){
-            //TODO: Start WinCutscene
             confetti.SetActive(true);
             endText.text = "You won!";
             winCutscene.SetActive(true);
-            //Debug.Log("YOU WON in CheckIfWon");
         }
         else
         {
-            //TODO: Start LoseCutscene
             explosion.SetActive(true);
             endText.text = "You lost";
             loseCutscene.SetActive(true);
-            //Debug.Log("You lost in CheckIfWon :(");
         }
         director.Play();
+    }
+
+    private void SetInstructions()
+    {
+        instructions.Enqueue(suitcase.name);
+        instructions.Enqueue(stool.name);
     }
 }
 

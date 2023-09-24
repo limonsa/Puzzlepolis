@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -23,6 +24,28 @@ public class ProductOf3_Controller : MonoBehaviour
     private List<Addend> shortestPath;
 
     PlayableDirector director;
+
+    private static ProductOf3_Controller instance = null;
+    private static readonly object padlock = new object();
+
+    ProductOf3_Controller()
+    {
+    }
+
+    public static ProductOf3_Controller Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new ProductOf3_Controller();
+                }
+                return instance;
+            }
+        }
+    }
 
     private void Awake()
     {
