@@ -6,8 +6,6 @@ using UnityEngine.Playables;
 
 public class ProductOf3_Controller : MonoBehaviour
 {
-    public List<Addend> addends = new List<Addend>();
-    public List<Addend> winnerPath = new List<Addend>();
     [SerializeField] private GameObject portal;
     [SerializeField] private Transform positionPortalView;
     [SerializeField] private GameObject cameraGuide;
@@ -16,14 +14,16 @@ public class ProductOf3_Controller : MonoBehaviour
     [SerializeField] private Addend startAddend;
     [SerializeField] private Addend targetAddend;
     [SerializeField] private GameObject endCutscene;
+    [SerializeField] private LineRenderer path;
+    [SerializeField] private Addend[] solution;
 
-    public LineRenderer path;
-
+    private List<Addend> addends = new List<Addend>();
+    private List<Addend> winnerPath = new List<Addend>();
     private Dictionary<Addend, float> distances = new Dictionary<Addend, float>();
     private Dictionary<Addend, Addend> previousAddends = new Dictionary<Addend, Addend>();
     private List<Addend> shortestPath;
 
-    PlayableDirector director;
+    private PlayableDirector director;
 
     private static ProductOf3_Controller instance = null;
     private static readonly object padlock = new object();
@@ -60,6 +60,7 @@ public class ProductOf3_Controller : MonoBehaviour
     void Start()
     {
         director = endCutscene.GetComponent<PlayableDirector>();
+        SetWinnerPath();
     }
 
     private void Update()
@@ -78,6 +79,11 @@ public class ProductOf3_Controller : MonoBehaviour
             OpenPortal();
             ShowWinCutscene();
         }
+    }
+
+    private void SetWinnerPath()
+    {
+        winnerPath = new List<Addend>(solution);
     }
 
     public void CheckIfWon()
@@ -180,6 +186,7 @@ public class ProductOf3_Controller : MonoBehaviour
         cameraGuide.transform.position = positionPortalView.position;
         cameraGuide.transform.rotation = positionPortalView.rotation;
         //guide.transform.rotation = positionPortalView.rotation;
+        endCutscene.SetActive(true);
         director.Play();
     }
 }

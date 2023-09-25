@@ -18,12 +18,11 @@ public class HanoiGameManager : MonoBehaviour
     [SerializeField] private GameObject loseCutscene;
     [SerializeField] private GameObject timer;
 
-    PlayableDirector director;
+    private PlayableDirector director;
 
     private bool settingUpState = true;
     private bool movingBackState = false;
     public Vector3 logLastMove;
-
     private static HanoiGameManager instance = null;
     private static readonly object padlock = new object();
 

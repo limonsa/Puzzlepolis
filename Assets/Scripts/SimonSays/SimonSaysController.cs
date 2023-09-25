@@ -22,7 +22,7 @@ public class SimonSaysController : MonoBehaviour
     [SerializeField] private GameObject explosion;
     [SerializeField] private TMP_Text endText;
 
-    PlayableDirector director;
+    private PlayableDirector director;
     private string[] steps = new string[2];
     private Queue<string> instructions = new Queue<string>();
     private GameObject[] reported = new GameObject[2];
