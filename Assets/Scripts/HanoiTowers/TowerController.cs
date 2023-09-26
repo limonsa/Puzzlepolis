@@ -16,7 +16,6 @@ public class TowerController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Disk")) {
-            //Debug.Log($"Invoking TowerConroller.ReceivingCollision (Disk{collision.gameObject.name}, Tower{towerNumber})");
             ReceivingCollision?.Invoke(collision.gameObject, towerNumber, "TowerController");
         }
     }
@@ -74,7 +73,6 @@ public class TowerController : MonoBehaviour
         {
             disks.Peek().GetComponent<DiskController>().inPlay = true;
         }
-        //Debug.Log($"Removing Disk{rta.name} to tower {towerNumber} which now has {disks.Count} disks");
         return rta;
     }
 
@@ -86,7 +84,6 @@ public class TowerController : MonoBehaviour
             disks.Peek().GetComponent<DiskController>().inPlay = false;
         }
         disks.Push(disk);
-        //Debug.Log($"Adding Disk{disk.name} to tower {towerNumber}={disk.GetComponent<DiskController>().tower} which now has {disks.Count} disks");
     }
 
     public int GetTowerNumber()

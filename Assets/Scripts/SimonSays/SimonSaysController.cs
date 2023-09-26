@@ -13,6 +13,7 @@ public class SimonSaysController : MonoBehaviour
     [SerializeField] private GameObject bluePlatform;
     [SerializeField] private GameObject yellowPlatform;
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject introCutscene;
 
     [Header ("End game setup")]
     [SerializeField] private GameObject winCutscene;
@@ -27,9 +28,6 @@ public class SimonSaysController : MonoBehaviour
     private Queue<string> instructions = new Queue<string>();
     private GameObject[] reported = new GameObject[2];
     private int currentStep = 0;
-    private StepState progress = StepState.None;
-    private bool reportedBlue = false;
-    private bool reportedYellow = false;
 
     private static SimonSaysController instance = null;
     private static readonly object padlock = new object();
@@ -57,18 +55,13 @@ public class SimonSaysController : MonoBehaviour
     {
         FallingObject.ReportingCollision += HandlingCollision;
         confetti.SetActive(false);
-        director = winCutscene.GetComponent<PlayableDirector>();
         SetInstructions();
+        introCutscene.SetActive(true);
     }
 
     public void HandlingCollision(GameObject reporter, GameObject other)
     {
         int i = -1;
-        //foreach (string s in steps)
-        //{
-        //    Debug.Log($"steps has: {s}, Reporter is {reporter.name}, Other is {other.name} and currentStep={currentStep}");
-
-        //}
 
         if(reporter.CompareTag("Base") && other.CompareTag("Disk"))
         {
@@ -92,7 +85,6 @@ public class SimonSaysController : MonoBehaviour
         bool won = false;
         player.SetActive(false);
 
-        //Debug.Log($"CheckIfWon says: steps[0]={steps[0]}(must be blue) and steps[0]={steps[0]}(must be yellow) ALSO reported[blue].={reported[0].name}(must be suit) and reported[yellow].={reported[1].name}(must be stool)");
         if (steps[0].Equals(bluePlatform.name) && steps[1].Equals(yellowPlatform.name)) //platform order check
         {
             if (reported[0].Equals(suitcase) && reported[1].Equals(stool))  // Correct object on platform check

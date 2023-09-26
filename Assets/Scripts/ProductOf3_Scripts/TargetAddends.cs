@@ -11,7 +11,6 @@ public class CalcTarget : Playable
     void Start()
     {
         int[] rtaAddends = findAddendsSubidex();
-        //Debug.Log($"{rtaAddends[0]}, {rtaAddends[1]}");
     }
 
     // Update is called once per frame

@@ -6505,7 +6505,6 @@ MonoBehaviour:
     m_Bits: 128
   pickupDistance: 3
   grabObjectPos: {fileID: 1451127157}
-  hgmTEMP: {fileID: 0}
 --- !u!54 &593246257
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6619,6 +6618,7 @@ MonoBehaviour:
   bluePlatform: {fileID: 292721278}
   yellowPlatform: {fileID: 509191083}
   player: {fileID: 593246253}
+  introCutscene: {fileID: 1235369940}
   winCutscene: {fileID: 1525186293}
   loseCutscene: {fileID: 2119472566}
   timer: {fileID: 1636290675}
@@ -12458,7 +12458,7 @@ PlayableDirector:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235369940}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 581271cbcd47d43129cf331e629f0aab, type: 2}
   m_InitialState: 1

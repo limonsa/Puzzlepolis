@@ -65,19 +65,10 @@ public class ProductOf3_Controller : MonoBehaviour
 
     private void Update()
     {
-        //if (startAddend == null || targetAddend == null) {
-        //    Debug.Log("Entered Update");
-        //}else {
         if (startAddend != null && targetAddend != null)
         {
             CalculateCheapestPath();
             DrawCheapestPath();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            OpenPortal();
-            ShowWinCutscene();
         }
     }
 

@@ -12,7 +12,6 @@ public class Picker : MonoBehaviour
 
     [Header("Picked object transition view")]
     [SerializeField] private Transform grabObjectPos;
-    public HanoiGameManager hgmTEMP;
 
     public static UnityAction CheckWin;
     public static UnityAction<GameObject> GettingReadyToMove;
